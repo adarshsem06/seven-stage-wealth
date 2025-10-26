@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Plus, Trash2, PieChart, TrendingUp } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import ExpenseTracker from "@/components/stage1/ExpenseTracker";
 import BudgetOverview from "@/components/stage1/BudgetOverview";
 import PurchasePlanner from "@/components/stage1/PurchasePlanner";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Stage1() {
+  const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [monthlyIncome, setMonthlyIncome] = useState<number>(0);
   const [expenses, setExpenses] = useState<Array<{
     id: string;
@@ -21,12 +24,29 @@ export default function Stage1() {
     date: string;
   }>>([]);
 
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/auth");
+    }
+  }, [user, loading, navigate]);
+
   const handleIncomeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (monthlyIncome > 0) {
       toast.success("Monthly income set successfully!");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
