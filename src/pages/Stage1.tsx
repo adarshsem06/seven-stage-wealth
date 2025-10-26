@@ -11,6 +11,7 @@ import ExpenseTracker from "@/components/stage1/ExpenseTracker";
 import BudgetOverview from "@/components/stage1/BudgetOverview";
 import PurchasePlanner from "@/components/stage1/PurchasePlanner";
 import { useAuth } from "@/hooks/useAuth";
+import { loadUserProfile, saveMonthlyIncome, saveExpenses } from "@/lib/userProfile";
 
 export default function Stage1() {
   const navigate = useNavigate();
@@ -23,12 +24,51 @@ export default function Stage1() {
     category: string;
     date: string;
   }>>([]);
+  const [dataLoading, setDataLoading] = useState(true);
+  const [isFirstTime, setIsFirstTime] = useState(false);
 
+  // Load user profile data when component mounts
   useEffect(() => {
     if (!loading && !user) {
       navigate("/auth");
+      return;
+    }
+
+    if (user && !loading) {
+      setDataLoading(true);
+      loadUserProfile(user.id)
+        .then((profile) => {
+          setMonthlyIncome(profile.monthlyIncome);
+          setExpenses(profile.expenses);
+          setIsFirstTime(profile.monthlyIncome === 0);
+        })
+        .catch((error) => {
+          console.error("Error loading profile:", error);
+          setIsFirstTime(true);
+        })
+        .finally(() => {
+          setDataLoading(false);
+        });
     }
   }, [user, loading, navigate]);
+
+  // Auto-save income when it changes (but only after initial load)
+  useEffect(() => {
+    if (user && monthlyIncome > 0 && !dataLoading) {
+      saveMonthlyIncome(user.id, monthlyIncome).catch((error) => {
+        console.error("Error saving income:", error);
+      });
+    }
+  }, [monthlyIncome, user, dataLoading]);
+
+  // Auto-save expenses when they change (but only after initial load)
+  useEffect(() => {
+    if (user && expenses.length >= 0 && !dataLoading) {
+      saveExpenses(user.id, expenses).catch((error) => {
+        console.error("Error saving expenses:", error);
+      });
+    }
+  }, [expenses, user, dataLoading]);
 
   const handleIncomeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,12 +77,12 @@ export default function Stage1() {
     }
   };
 
-  if (loading) {
+  if (loading || dataLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">Loading your data...</p>
         </div>
       </div>
     );
@@ -71,8 +111,8 @@ export default function Stage1() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Income Setup Card */}
-        {monthlyIncome === 0 && (
+        {/* Income Setup Card - Only show if no income is saved */}
+        {!dataLoading && monthlyIncome === 0 && (
           <Card className="p-8 gradient-card border-primary/20 mb-8 shadow-glow animate-scale-in">
             <div className="max-w-md mx-auto">
               <h2 className="text-2xl font-bold mb-4 text-center">
