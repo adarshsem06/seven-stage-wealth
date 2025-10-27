@@ -71,7 +71,7 @@ export const loadUserProfile = async (userId: string) => {
     if (data) {
       const profile = {
         monthlyIncome: data?.monthly_income || 0,
-        expenses: (data?.expenses as Expense[]) || []
+        expenses: (data?.expenses as unknown as Expense[]) || []
       };
       
       // Save to localStorage as backup
