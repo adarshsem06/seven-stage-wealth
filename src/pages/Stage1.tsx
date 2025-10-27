@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import ExpenseTracker from "@/components/stage1/ExpenseTracker";
 import BudgetOverview from "@/components/stage1/BudgetOverview";
 import PurchasePlanner from "@/components/stage1/PurchasePlanner";
+import ExpenseAnalytics from "@/components/stage1/ExpenseAnalytics";
 import { useAuth } from "@/hooks/useAuth";
 import { loadUserProfile, saveMonthlyIncome, saveExpenses } from "@/lib/userProfile";
 
@@ -178,12 +179,10 @@ export default function Stage1() {
               </TabsContent>
 
               <TabsContent value="analytics" className="mt-6">
-                <Card className="p-6 gradient-card">
-                  <h3 className="text-xl font-semibold mb-4">Expense Analytics</h3>
-                  <p className="text-muted-foreground">
-                    Category breakdown and spending insights coming soon...
-                  </p>
-                </Card>
+                <ExpenseAnalytics 
+                  expenses={expenses}
+                  monthlyIncome={monthlyIncome}
+                />
               </TabsContent>
 
               <TabsContent value="planner" className="mt-6">

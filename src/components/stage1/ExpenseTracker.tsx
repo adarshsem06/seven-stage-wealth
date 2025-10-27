@@ -8,17 +8,45 @@ import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const EXPENSE_CATEGORIES = [
+  // Needs (50%)
   { value: "rent", label: "Rent", type: "needs" },
   { value: "emi", label: "EMIs", type: "needs" },
   { value: "utilities", label: "Utility Bills", type: "needs" },
-  { value: "groceries", label: "Food/Groceries", type: "needs" },
-  { value: "dining", label: "Dining Out", type: "wants" },
-  { value: "delivery", label: "Food Delivery", type: "wants" },
-  { value: "clothes", label: "Clothes", type: "wants" },
-  { value: "entertainment", label: "Entertainment", type: "wants" },
-  { value: "gadgets", label: "Gadgets", type: "wants" },
-  { value: "travel", label: "Travel/Vacation", type: "wants" },
+  { value: "internet", label: "Internet/Phone", type: "needs" },
+  { value: "groceries", label: "Groceries", type: "needs" },
+  { value: "milk", label: "Milk", type: "needs" },
+  { value: "vegetables", label: "Vegetables", type: "needs" },
+  { value: "medicine", label: "Medicine/Healthcare", type: "needs" },
+  { value: "insurance", label: "Insurance", type: "needs" },
+  { value: "education", label: "Education", type: "needs" },
+  { value: "transport-commute", label: "Commute Transport", type: "needs" },
+  { value: "bus", label: "Bus", type: "needs" },
+  { value: "metro", label: "Metro", type: "needs" },
+  { value: "fuel", label: "Fuel", type: "needs" },
   { value: "other-needs", label: "Other Needs", type: "needs" },
+  
+  // Wants (30%)
+  { value: "dining", label: "Dining Out", type: "wants" },
+  { value: "lunch", label: "Lunch Out", type: "wants" },
+  { value: "dinner", label: "Dinner Out", type: "wants" },
+  { value: "breakfast", label: "Breakfast Out", type: "wants" },
+  { value: "delivery", label: "Food Delivery", type: "wants" },
+  { value: "swiggy", label: "Swiggy", type: "wants" },
+  { value: "zomato", label: "Zomato", type: "wants" },
+  { value: "rapido", label: "Rapido/Cab", type: "wants" },
+  { value: "uber", label: "Uber/Ola", type: "wants" },
+  { value: "clothes", label: "Clothes/Fashion", type: "wants" },
+  { value: "shopping", label: "Shopping", type: "wants" },
+  { value: "entertainment", label: "Entertainment", type: "wants" },
+  { value: "movies", label: "Movies", type: "wants" },
+  { value: "subscriptions", label: "Subscriptions", type: "wants" },
+  { value: "gadgets", label: "Gadgets/Electronics", type: "wants" },
+  { value: "gaming", label: "Gaming", type: "wants" },
+  { value: "travel", label: "Travel/Vacation", type: "wants" },
+  { value: "gym", label: "Gym/Fitness", type: "wants" },
+  { value: "salon", label: "Salon/Grooming", type: "wants" },
+  { value: "gifts", label: "Gifts", type: "wants" },
+  { value: "hobbies", label: "Hobbies", type: "wants" },
   { value: "other-wants", label: "Other Wants", type: "wants" },
 ];
 
@@ -115,14 +143,14 @@ export default function ExpenseTracker({ expenses, onExpensesChange }: ExpenseTr
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
-                <SelectContent>
-                  <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground">Needs (50%)</div>
+                <SelectContent className="max-h-[300px]" position="popper" sideOffset={5}>
+                  <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground sticky top-0 bg-background z-10">Needs (50%)</div>
                   {EXPENSE_CATEGORIES.filter(cat => cat.type === "needs").map((cat) => (
                     <SelectItem key={cat.value} value={cat.value}>
                       {cat.label}
                     </SelectItem>
                   ))}
-                  <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground mt-2">Wants (30%)</div>
+                  <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground mt-2 sticky top-0 bg-background z-10">Wants (30%)</div>
                   {EXPENSE_CATEGORIES.filter(cat => cat.type === "wants").map((cat) => (
                     <SelectItem key={cat.value} value={cat.value}>
                       {cat.label}
